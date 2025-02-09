@@ -17,6 +17,29 @@ export const resolvers: Resolvers = {
       return dataSources.trackAPI.getModule(id);
     },
   },
+
+  Mutation: {
+    // where our new resolver function will go
+    incrementTrackViews: async (_, {id}, {dataSources}) => {
+      try {
+        const track = await dataSources.trackAPI.incrementTrackViews(id);
+        return {
+          code: 200,
+          success: true,
+          message: `Successfully incremented number of views for track ${id}`,
+          track
+        };
+      } catch (err) {
+        return {
+          code: err.extensions.response.status,
+          success: false,
+          message: err.extensions.response.body,
+        
+        };
+      }
+    },
+  },
+
   Track: {
     author: ({ authorId }, _, { dataSources }) => {
       return dataSources.trackAPI.getAuthor(authorId);
